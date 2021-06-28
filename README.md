@@ -1,6 +1,6 @@
 # jsonschema-tools
 
-This is a pair of programs that 
+This is a pair of programs for manipulating JSON Schema files.
 
 `jsonschema-merge-dicts` takes one or more JSON Schema files and makes them one.
 
