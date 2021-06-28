@@ -1,0 +1,34 @@
+{
+    "type": "object",
+    "properties": {
+	"schema": {
+	    "$ref": "#/pScheduler/Cardinal",
+	    "title": "Schema"
+	},
+	"duration": {
+	    "$ref": "#/pScheduler/Duration",
+	    "title": "Duration",
+	    "description": "How long to be idle"
+	},
+	"host": {
+	    "$ref": "#/pScheduler/Host",
+	    "title": "Host"
+	},
+	"host-node": {
+	    "$ref": "#/pScheduler/URLHostPort",
+	    "title": "Host Node"
+	},
+	"parting-comment": {
+	    "$ref": "#/pScheduler/String",
+	    "title": "Parting Comment"
+	},
+	"starting-comment": {
+	    "$ref": "#/pScheduler/String",
+	    "title": "Starting Comment"
+	}
+    },
+    "additionalProperties": false,
+    "required": [
+	"duration"
+    ]
+}

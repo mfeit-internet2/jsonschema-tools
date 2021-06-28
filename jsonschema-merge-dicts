@@ -1,0 +1,170 @@
+#!/usr/bin/env python3                                                                                                             
+
+import argparse
+import json
+import sys
+
+from common import die, dump_json, get_ref
+
+# Gargle the arguments
+
+arg_parser = argparse.ArgumentParser()
+
+# Daemon-related options
+
+arg_parser.add_argument("--merge-all", "-a",
+                        help="Merge all JSON without regard for references",
+                        action="store_true",
+                        dest="merge_all", default=False)
+
+arg_parser.add_argument("--pretty", "-p",
+                        help="Format the output for humans",
+                        action="store_true",
+                        dest="pretty", default=False)
+
+arg_parser.add_argument("--quiet", "-q",
+                        help="Don't produce output",
+                        action="store_true",
+                        dest="quiet", default=False)
+
+arg_parser.add_argument("--strip", "-s",
+                        help="Strip out any non-top-level item with no references",
+                        action="store_true",
+                        dest="strip", default=False)
+
+arg_parser.add_argument("--unresolved-ok", "-u",
+                        help="Don't complain about unresolved references",
+                        action="store_true",
+                        dest="unresolved_ok", default=False)
+
+
+arg_parser.add_argument("remaining",
+                        help=argparse.SUPPRESS,
+                        nargs=argparse.REMAINDER)
+
+args = arg_parser.parse_args()
+
+
+
+
+
+def all_refs(struct):
+
+    """Return all references in a structure as a dictionary"""
+
+    if not isinstance(struct, dict):
+        return {}
+
+    refs = {}
+
+    for key,value in struct.items():
+
+        if isinstance(value, dict):
+            refs.update(all_refs(value))
+
+        elif isinstance(value, list):
+            for item in value:
+                add = dict([ (ref, 1) for ref in all_refs(item) ])
+                refs.update(add)
+
+        else:
+            if key == "$ref" and isinstance(value, str):
+                refs[value] = 1
+
+    return refs
+
+
+
+
+
+
+def merge_dicts(dict1, dict2):
+    """
+    Merge two dictionaries.
+    Source: https://stackoverflow.com/a/7205672
+    """
+    for k in set(dict1.keys()).union(dict2.keys()):
+        if k in dict1 and k in dict2:
+            if isinstance(dict1[k], dict) and isinstance(dict2[k], dict):
+                yield (k, dict(merge_dicts(dict1[k], dict2[k])))
+            else:
+                # If one of the values is not a dict, you can't continue merging it.
+                # Value from second dict overrides one in first and we move on.
+                yield (k, dict2[k])
+                # Alternatively, replace this with exception raiser to alert you of value conflicts
+        elif k in dict1:
+            yield (k, dict1[k])
+        else:
+            yield (k, dict2[k])
+
+
+
+result = {}
+unresolved_refs = {}
+first = True
+
+
+for source in args.remaining:
+
+    try:
+        with open(source, "r") as data:
+            loaded = json.load(data)
+    except Exception as ex:
+        die("{0}: {1}".format(source, ex))
+
+    if args.merge_all:
+        result = dict(merge_dicts(result, loaded))
+        continue
+
+    # The first file is a special case
+
+    if first:
+        first = False
+
+        # Drop it in wholesale because there's nothing to reference it
+        result = dict(merge_dicts(result, loaded))
+
+        # Find non-resolving references
+        for ref in all_refs(loaded).keys():
+            if get_ref(loaded, ref) is None:
+                unresolved_refs[ref] = 1
+
+        continue
+
+
+    # For the second and later files, merge in only the parts that are
+    # referred to by an unresolved reference.
+
+    added = True
+
+    while added:
+
+        added = False
+
+        # Listify this so we can alter the hash on the fly.
+        for unresolved in list(unresolved_refs.keys()):
+
+            ref = get_ref(loaded, unresolved)
+            if ref is not None:
+                result = dict(merge_dicts(result, ref))
+                for add in all_refs(ref).keys():
+                    unresolved_refs[add] = 1
+                    added = True
+                try:
+                    del unresolved_refs[unresolved]
+                except KeyError:
+                    pass  # We may have deleted this one already.
+
+
+# Complain if anything was unresolved
+
+if not args.unresolved_ok and unresolved_refs:
+    die("Unresolved references:\n {0}".format(
+        "\n ".join(unresolved_refs.keys())))
+
+
+
+if not args.quiet:
+    dump_json(result, pretty=args.pretty)
+
+exit(0)

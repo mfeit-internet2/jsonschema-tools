@@ -1,0 +1,138 @@
+#!/usr/bin/env python3                                                                                                             
+#
+# Dereference any $ref entries in JSON SChema
+#
+# This is largely a more-compact reinvention of
+# https://github.com/gazpachoking/jsonref.
+#
+
+
+import argparse
+import copy
+import json
+import sys
+
+from common import die, dump_json, get_ref, ref_parts
+
+# Gargle the arguments
+
+arg_parser = argparse.ArgumentParser()
+
+# Daemon-related options
+
+arg_parser.add_argument("--overlay", "-o",
+                        help="Overlay referenced content",
+                        action="store_true",
+                        dest="overlay", default=False)
+
+arg_parser.add_argument("--pretty", "-p",
+                        help="Format the output for humans",
+                        action="store_true",
+                        dest="pretty", default=False)
+
+arg_parser.add_argument("--quiet", "-q",
+                        help="Don't produce output",
+                        action="store_true",
+                        dest="quiet", default=False)
+
+arg_parser.add_argument("input",
+                        help="Input file; stdin if not provided",
+                        nargs="?")
+
+args = arg_parser.parse_args()
+
+
+
+#
+# Load Up
+#
+
+input_name = "stdin" if args.input is None else args.input
+
+try:
+    data = json.load( sys.stdin if args.input is None
+                      else open(args.input, "r") )
+except Exception as ex:
+    die("{0}: {1}".format(input_name, ex))
+
+
+def walk_all(struct, struct_top):
+    """Walk a tree and find a list of the references."""
+
+    if not isinstance(struct, dict):
+        return {}
+
+    refs = {}
+
+    for key,value in struct.items():
+
+        if isinstance(value, dict):
+
+            if "$ref" in value:
+                ref = value["$ref"]
+                refs[ref] = 1
+                if args.overlay:
+                    # TODO: Start with what's in the ref and overlay
+                    # what's in the main stuff so things can be
+                    # overridden properly.
+                    del struct[key]["$ref"]
+                    struct[key].update(get_ref(struct_top, ref, leaf=True))
+                else:
+                    struct[key] = copy.deepcopy(get_ref(struct_top, value["$ref"], leaf=True))
+                new_refs = walk_all(struct[key], struct_top)
+                refs.update(new_refs)
+            else:
+                new_refs = walk_all(value, struct_top)
+                refs.update(new_refs)
+
+
+        elif isinstance(value, list):
+            for num, item in enumerate(value):
+                if isinstance(item, dict) and "$ref" in item:
+                    new_value = copy.deepcopy(get_ref(struct_top, item["$ref"], leaf=True))
+                    refs[item["$ref"]] = 1
+                    new_refs = walk_all(new_value, struct_top)
+                    refs.update(new_refs)
+                    value[num] = new_value
+
+        else:
+            if key == "$ref" and isinstance(value, str):
+                assert False, "Found a stray $ref {0}".format(value["$ref"])
+
+    return refs
+
+refs = walk_all(data, data)
+
+
+
+#
+# Delete anything that was referenced
+#
+
+def delete_ref(data, parts):
+    """Recursively delete references"""
+
+    assert len(parts) > 0
+
+    if len(parts) == 1:
+        del data[parts[0]]
+    else:
+        if delete_ref(data[parts[0]], parts[1:]):
+            # What we sent in came up empty, so get rid of it, too.
+            del data[parts[0]]
+
+    return len(data) == 0
+
+
+for key in [ ref_parts(ref) for ref in refs.keys() ]:
+    delete_ref(data, key)
+
+
+#
+# Make output.
+#
+
+if not args.quiet:
+    dump_json(data, args.pretty)
+
+exit(0)
