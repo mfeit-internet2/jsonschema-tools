@@ -2,8 +2,9 @@
 # Makefile for experimenting with jsonschema-tools
 #
 
-SCHEMA=idle-schema
+SCHEMA=s3throughput-schema
 
+SINGLE=$(SCHEMA)-single
 MERGED=$(SCHEMA)-merged
 DEREFED=$(SCHEMA)-deref
 
@@ -13,8 +14,11 @@ DICTS=\
 
 default: $(SCHEMA)-deref
 
-$(MERGED): jsonschema-merge-dicts $(SCHEMA) $(DICTS)
-	./jsonschema-merge-dicts --pretty $(SCHEMA) $(DICTS) > $@
+$(SINGLE): extract-latest $(SCHEMA)
+	./extract-latest < $(SCHEMA) > $@
+
+$(MERGED): jsonschema-merge-dicts $(SINGLE) $(DICTS)
+	./jsonschema-merge-dicts --pretty $(SINGLE) $(DICTS) > $@
 TO_CLEAN += $(MERGED)
 
 $(DEREFED): $(MERGED)

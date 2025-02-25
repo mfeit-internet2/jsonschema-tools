@@ -1,0 +1,75 @@
+#!/usr/bin/env python3
+#
+# Extract the latest/highest version of a pScheduler-standard
+# validation schema, which looks like this:
+#
+#    {
+#      "local": {
+#          ... JSON Schema for locally-defined objects ...
+#      },
+#      "versions": {
+#        "1": {
+#           ... JSON Schema for version 1 ...
+#        },
+#        "2": {
+#           ... JSON Schema for version 2 ...
+#        }
+#      }
+#    }
+#
+# See:
+# https://github.com/perfsonar/pscheduler/blob/b86f9c6422b5bdc00412384d0eb68ea679c93230/python-pscheduler/pscheduler/pscheduler/jsonval.py#L1482
+#
+
+import json
+import sys
+
+from common import die, dump_json, get_ref
+
+try:
+    loaded = json.load(sys.stdin)
+except json.decoder.JSONDecodeError as ex:
+    die(ex)
+
+# TODO: Have JSONSchema validate the input?
+
+try:
+    versions = loaded['versions']
+except KeyError:
+    die('Did not find versions in input')
+
+# Find the highest version that converts to a number
+
+high_version = 0
+for version_key in versions:
+    try:
+        version = int(version_key)
+    except ValueError:
+        continue
+
+    if version > high_version:
+        high_version = version
+
+if high_version == 0:
+    die('Found no schema versions to work with.')
+
+schema = versions[str(high_version)]
+
+# Strip out anything related to schemas
+
+try:
+    del schema['properties']['schema']
+except KeyError:
+    pass
+
+try:
+    schema['required'].remove('schema')
+except KeyError:
+    pass
+
+
+# Dump the results
+
+dump_json(schema, pretty=True)
+
+exit(0)

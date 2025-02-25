@@ -172,7 +172,9 @@
         },
         "Cardinal": {
             "minimum": 1,
-            "type": "integer"
+            "type": "integer",
+	    "x-help": "An integer greater than zero",
+            "x-invalid-message": "Invalid cardinal number"
         },
         "CardinalList": {
             "items": {
@@ -293,6 +295,7 @@
         "Duration": {
             "pattern": "^P(?:\\d+(?:\\.\\d+)?W)?(?:\\d+(?:\\.\\d+)?D)?(?:T(?:\\d+(?:\\.\\d+)?H)?(?:\\d+(?:\\.\\d+)?M)?(?:\\d+(?:\\.\\d+)?S)?)?$",
             "type": "string",
+	    "x-help": "An ISO8601 duration, e.g., PT3M2S or P1DT2H",
             "x-invalid-message": "'%s' is not a valid ISO 8601 duration."
         },
         "DurationRange": {
@@ -348,7 +351,7 @@
             "type": "string"
         },
 
-        "Host -------- DOES NOT WORK WITH JSON EDITOR.  SEE BELOW. --------": {
+        "Host": {
             "anyOf": [
                 {
                     "$ref": "#/pScheduler/HostName"
@@ -356,24 +359,9 @@
                 {
                     "$ref": "#/pScheduler/IPAddress"
                 }
-            ]
-        },
-
-        "Host": {
-	    "#": {
-		"#": "-------- THREE REGEXPS --------",
-
-		"#": "SOURCE: https://www.regextester.com/23",
-		"FQDN": "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$",
-
-		"#": "SOURCE: https://www.oreilly.com/library/view/regular-expressions-cookbook/9780596802837/ch07s16.html",
-		"IPv4": "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$",
-
-		"#": "SOURCE: https://stackoverflow.com/a/32368136",
-		"IPv6": "(?:^|(?<=\\s))(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))(?=\\s|$)"
-	    },
-	    "type": "string",
-	    "pattern": "((^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$)|(^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$)|((?:^|(?<=\\s))(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))(?=\\s|$)))"
+            ],
+	    "x-help": "A host name or IP address",
+	    "x-invalid-message": "Invalid host name."
         },
 
         "HostName": {
@@ -1387,7 +1375,10 @@
             "type": "object"
         },
         "String": {
-            "type": "string"
+            "type": "string",
+	    "x-help": "A free-form string",
+	    "x-invalid-message": "Invalid string."
+
         },
         "StringList": {
             "items": {
@@ -1640,7 +1631,9 @@
         },
         "URL": {
             "format": "uri",
-            "type": "string"
+            "type": "string",
+	    "x-help": "A Uniform Resource Locator (URL) as defined by RFC 3986.",
+            "x-invalid-message": "Invalid URL"
         },
         "URLHostPort": {
             "anyOf": [

@@ -1,0 +1,146 @@
+{
+    "local": {
+        "#": "Define any local types used in the spec here"
+    },
+    
+    "versions": {
+        
+        "#": "Initial version of the specification",
+        "1": {
+            "type": "object",
+            "properties": {
+                "schema": { "type": "integer", "enum": [ 1 ] },
+                "host":        { "$ref": "#/pScheduler/Host" },
+                "host-node":   { "$ref": "#/pScheduler/Host" },
+                "duration":    { "$ref": "#/pScheduler/Duration" },
+                "timeout":     { "$ref": "#/pScheduler/Duration" },
+	        "_access-key": { "$ref": "#/pScheduler/String" },
+	        "bucket":      { "$ref": "#/pScheduler/String" },
+                "_secret-key": { "$ref": "#/pScheduler/String" },
+	        "url":	       { "$ref": "#/pScheduler/URL" },
+       	        "iterations":  { "$ref": "#/pScheduler/Cardinal" },
+	        "object-size": { "$ref": "#/pScheduler/Cardinal" }
+            },
+            "#": "If listed here, data of this type MUST be in the test spec",
+            "required": [
+                "_access-key",
+                "bucket",
+	        "_secret-key",
+                "url",
+                "object-size"
+            ],
+            "#": "Set to false if ONLY required options should be used",
+            "additionalProperties": false
+        },
+        
+        "#": "Second and later versions of the specification",
+        "2": {
+            "type": "object",
+            "properties": {
+                "schema": { "type": "integer", "enum": [ 2 ] },
+                "host": {
+		    "$ref": "#/pScheduler/Host",
+		    "x-title": "Host",
+		    "x-description": "Name of host where the test should run",
+		    "x-hint": "Host"
+		},
+                "host-node":   {
+		    "$ref": "#/pScheduler/Host",
+		    "x-title": "Host Node",
+		    "x-description": "The pScheduler host to contact",
+		    "x-hint": "Host Node"
+		},
+                "duration":    { "$ref": "#/pScheduler/Duration" },
+                "timeout":     {
+		    "$ref": "#/pScheduler/Duration",
+		    "x-title": "Timeout",
+		    "x-description": "How long to wait before giving up",
+		    "x-hint": "Timeout"
+		},
+	        "_access-key": {
+		    "$ref": "#/pScheduler/String",
+		    "x-title": "Access Key",
+		    "x-description": "The access key for the S3 server",
+		    "x-hint": "Access Key"
+		},
+	        "bucket":      {
+		    "$ref": "#/pScheduler/String",
+		    "x-title": "Bucket",
+		    "x-description": "S3 bucket to use for the test",
+		    "x-hint": "Bucket"
+		    
+		},
+                "_secret-key": {
+		    "$ref": "#/pScheduler/String",
+		    "x-title": "Secret Key",
+		    "x-description": "The secret key for the S3 server",
+		    "x-hint": "Secret Key"
+		},
+	        "url":	       {
+		    "$ref": "#/pScheduler/URL",
+		    "x-title": "URL",
+		    "x-description": "URL for the S3 server",
+		    "x-hint": "https://..."
+		},
+       	        "iterations":  {
+		    "$ref": "#/pScheduler/Cardinal",
+		    "x-title": "Iterations",
+		    "x-description": "Number of times to test",
+		    "x-hint": "1..N"
+		},
+	        "object-size": {
+		    "$ref": "#/pScheduler/Cardinal",
+		    "x-title": "Object Size",
+		    "x-description": "Size of objects to write during testing",
+		    "x-hint": "1..N"
+		},
+		"added-field": {
+		    "$ref": "#/pScheduler/String",
+		    "x-title": "Added Field",
+		    "x-description": "A field added so there would be a schema version 2",
+		    "x-hint": "Stuff..."
+		}
+            },
+            "required": [
+                "schema",
+		"url",
+		"_access-key",
+                "bucket",
+	        "_secret-key",
+                "url",
+                "object-size"
+            ],
+            "additionalProperties": false,
+	    "x-display-arrangement": {
+		"label": null,
+		"properties": [
+		    "url",
+		    "bucket",
+		    "_access-key",
+		    "_secret-key",
+		    {
+			"label": "Quantity and Time",
+			"properties": [
+			    "duration",
+			    "iterations"
+			]
+		    },
+		    {
+			"label": "Advanced",
+			"properties": [
+			    "host",
+			    "host-node",
+			    "object-size",
+			    {
+				"label": "Ultra-Advanced",
+				"properties": [
+				    "added-field"
+				]
+			    }
+			]
+		    }
+		]
+	    }
+        }
+    }
+}
