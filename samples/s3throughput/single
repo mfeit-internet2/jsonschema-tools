@@ -1,0 +1,144 @@
+{
+    "additionalProperties": false,
+    "properties": {
+        "_access-key": {
+            "$ref": "#/pScheduler/String",
+            "x-description": "The access key for the S3 server",
+            "x-hint": "Access Key",
+            "x-title": "Access Key"
+        },
+        "_secret-key": {
+            "$ref": "#/pScheduler/String",
+            "x-description": "The secret key for the S3 server",
+            "x-hint": "Secret Key",
+            "x-title": "Secret Key"
+        },
+        "added-field": {
+            "$ref": "#/pScheduler/String",
+            "x-description": "A field added so there would be a schema version 2",
+            "x-hint": "Stuff...",
+            "x-title": "Added Field"
+        },
+        "bucket": {
+            "$ref": "#/pScheduler/String",
+            "x-description": "S3 bucket to use for the test",
+            "x-hint": "Bucket",
+            "x-title": "Bucket"
+        },
+        "duration": {
+            "$ref": "#/pScheduler/Duration"
+        },
+        "host": {
+            "$ref": "#/pScheduler/Host",
+            "x-description": "Name of host where the test should run",
+            "x-hint": "Host",
+            "x-title": "Host"
+        },
+        "host-node": {
+            "$ref": "#/pScheduler/Host",
+            "x-description": "The pScheduler host to contact",
+            "x-hint": "Host Node",
+            "x-title": "Host Node"
+        },
+        "iterations": {
+            "$ref": "#/pScheduler/Cardinal",
+            "x-description": "Number of times to test",
+            "x-hint": "1..N",
+            "x-title": "Iterations"
+        },
+        "object-size": {
+            "$ref": "#/pScheduler/Cardinal",
+            "x-description": "Size of objects to write during testing",
+            "x-hint": "1..N",
+            "x-title": "Object Size"
+        },
+        "timeout": {
+            "$ref": "#/pScheduler/Duration",
+            "x-description": "How long to wait before giving up",
+            "x-hint": "Timeout",
+            "x-title": "Timeout"
+        },
+        "url": {
+            "$ref": "#/pScheduler/URL",
+            "x-description": "URL for the S3 server",
+            "x-hint": "https://...",
+            "x-title": "URL"
+        }
+    },
+    "required": [
+        "url",
+        "_access-key",
+        "bucket",
+        "_secret-key",
+        "url",
+        "object-size"
+    ],
+    "type": "object",
+    "x-forms": {
+        "jsonschema": {
+            "uischema": {
+                "elements": [
+                    {
+                        "scope": "#/properties/url",
+                        "type": "Control"
+                    },
+                    {
+                        "scope": "#/properties/bucket",
+                        "type": "Control"
+                    },
+                    {
+                        "scope": "#/properties/_access-key",
+                        "type": "Control"
+                    },
+                    {
+                        "scope": "#/properties/_secret-key",
+                        "type": "Control"
+                    },
+                    {
+                        "elements": [
+                            {
+                                "scope": "#/properties/duration",
+                                "type": "Control"
+                            },
+                            {
+                                "scope": "#/properties/iterations",
+                                "type": "Control"
+                            }
+                        ],
+                        "label": "Quantity and Time",
+                        "type": "Group"
+                    },
+                    {
+                        "elements": [
+                            {
+                                "scope": "#/properties/host",
+                                "type": "Control"
+                            },
+                            {
+                                "scope": "#/properties/host-node",
+                                "type": "Control"
+                            },
+                            {
+                                "scope": "#/properties/object-size",
+                                "type": "Control"
+                            },
+                            {
+                                "elements": [
+                                    {
+                                        "scope": "#/properties/added-field",
+                                        "type": "Control"
+                                    }
+                                ],
+                                "label": "Ultra-Advanced",
+                                "type": "Group"
+                            }
+                        ],
+                        "label": "Advanced",
+                        "type": "Group"
+                    }
+                ],
+                "type": "VerticalLayout"
+            }
+        }
+    }
+}

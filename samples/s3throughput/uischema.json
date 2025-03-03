@@ -1,0 +1,67 @@
+{
+  "elements": [
+    {
+      "scope": "#/properties/url",
+      "type": "Control"
+    },
+    {
+      "scope": "#/properties/bucket",
+      "type": "Control"
+    },
+    {
+      "scope": "#/properties/_access-key",
+      "type": "Control"
+    },
+    {
+      "scope": "#/properties/_secret-key",
+      "type": "Control"
+    },
+    {
+      "elements": [
+        {
+          "scope": "#/properties/duration",
+          "type": "Control"
+        },
+        {
+          "scope": "#/properties/iterations",
+          "type": "Control"
+        }
+      ],
+      "label": "Quantity and Time",
+      "type": "Group"
+    },
+    {
+      "elements": [
+        {
+          "scope": "#/properties/host",
+          "type": "Control"
+        },
+        {
+          "scope": "#/properties/host-node",
+          "type": "Control"
+        },
+        {
+          "scope": "#/properties/object-size",
+          "type": "Control"
+        },
+        {
+          "elements": [
+            {
+              "scope": "#/properties/added-field",
+              "type": "Control"
+            },
+	      {
+		  "scope": "#/properties/multi-thing",
+		  "type": "Control"
+	      }
+          ],
+          "label": "Ultra-Advanced",
+          "type": "Group"
+        }
+      ],
+      "label": "Advanced",
+      "type": "Group"
+    }
+  ],
+  "type": "VerticalLayout"
+}

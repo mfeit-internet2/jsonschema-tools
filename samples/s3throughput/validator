@@ -111,35 +111,74 @@
                 "object-size"
             ],
             "additionalProperties": false,
-	    "x-display-arrangement": {
-		"label": null,
-		"properties": [
-		    "url",
-		    "bucket",
-		    "_access-key",
-		    "_secret-key",
-		    {
-			"label": "Quantity and Time",
-			"properties": [
-			    "duration",
-			    "iterations"
-			]
-		    },
-		    {
-			"label": "Advanced",
-			"properties": [
-			    "host",
-			    "host-node",
-			    "object-size",
+
+	    "x-forms": {
+	    	"jsonschema": {
+		    "uischema": {
+			"type": "VerticalLayout",
+			"elements": [
 			    {
-				"label": "Ultra-Advanced",
-				"properties": [
-				    "added-field"
+				"type": "Control",
+				"scope": "#/properties/url"
+			    },
+			    {
+				"type": "Control",
+				"scope": "#/properties/bucket"
+			    },
+			    {
+				"type": "Control",
+				"scope": "#/properties/_access-key"
+			    },
+			    {
+				"type": "Control",
+				"scope": "#/properties/_secret-key"
+			    },
+			    {
+				"type": "Group",
+				"label": "Quantity and Time",
+				"elements": [
+				    {
+					"type": "Control",
+					"scope": "#/properties/duration"
+				    },
+				    {
+					"type": "Control",
+					"scope": "#/properties/iterations"
+				    }
+				    
+				]
+			    },
+			    {
+				"type": "Group",
+				"label": "Advanced",
+				"elements": [
+				    {
+					"type": "Control",
+					"scope": "#/properties/host"
+				    },
+				    {
+					"type": "Control",
+					"scope": "#/properties/host-node"
+				    },
+				    {
+					"type": "Control",
+					"scope": "#/properties/object-size"
+				    },
+				    {
+					"type": "Group",
+					"label": "Ultra-Advanced",
+					"elements": [
+					    {
+						"type": "Control",
+						"scope": "#/properties/added-field"
+					    }
+					]
+				    }
 				]
 			    }
 			]
 		    }
-		]
+		}
 	    }
         }
     }

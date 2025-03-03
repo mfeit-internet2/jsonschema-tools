@@ -174,7 +174,9 @@
             "minimum": 1,
             "type": "integer",
 	    "x-help": "An integer greater than zero",
-            "x-invalid-message": "Invalid cardinal number"
+            "x-invalid-message": "Invalid cardinal number",
+	    "x-sample-valid": 3,
+	    "x-sample-invalid": 0
         },
         "CardinalList": {
             "items": {
@@ -296,7 +298,9 @@
             "pattern": "^P(?:\\d+(?:\\.\\d+)?W)?(?:\\d+(?:\\.\\d+)?D)?(?:T(?:\\d+(?:\\.\\d+)?H)?(?:\\d+(?:\\.\\d+)?M)?(?:\\d+(?:\\.\\d+)?S)?)?$",
             "type": "string",
 	    "x-help": "An ISO8601 duration, e.g., PT3M2S or P1DT2H",
-            "x-invalid-message": "'%s' is not a valid ISO 8601 duration."
+            "x-invalid-message": "'%s' is not a valid ISO 8601 duration.",
+	    "x-sample-valid": "P1DT2H",
+	    "x-sample-invalid": "PT3D4M"
         },
         "DurationRange": {
             "additionalProperties": false,
@@ -361,7 +365,9 @@
                 }
             ],
 	    "x-help": "A host name or IP address",
-	    "x-invalid-message": "Invalid host name."
+	    "x-invalid-message": "Invalid host name.",
+	    "x-sample-valid": "foo.example.com",
+	    "x-sample-invalid": "bob@example.com"
         },
 
         "HostName": {
@@ -1377,8 +1383,10 @@
         "String": {
             "type": "string",
 	    "x-help": "A free-form string",
-	    "x-invalid-message": "Invalid string."
-
+	    "x-invalid-message": "Invalid string.",
+	    "x-sample-valid": "Hello, world!",
+	    "x-sample-invalid": 38
+	    
         },
         "StringList": {
             "items": {
@@ -1633,7 +1641,9 @@
             "format": "uri",
             "type": "string",
 	    "x-help": "A Uniform Resource Locator (URL) as defined by RFC 3986.",
-            "x-invalid-message": "Invalid URL"
+            "x-invalid-message": "Invalid URL",
+	    "x-sample-valid": "https://www.example.com/foo",
+	    "x-sample-invalid": "<BLINK>"
         },
         "URLHostPort": {
             "anyOf": [
